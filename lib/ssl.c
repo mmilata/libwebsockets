@@ -308,7 +308,10 @@ lws_ssl_capable_read(struct lws *wsi, unsigned char *buf, int len)
 		n = lws_ssl_get_error(wsi, n);
 		lwsl_debug("%p: ssl err %d errno %d\n", wsi, n, errno);
 		if (n == SSL_ERROR_ZERO_RETURN)
+		{
+			close(wsi->desc.sockfd);
 			return LWS_SSL_CAPABLE_ERROR;
+		}
 
 		if (n == SSL_ERROR_SYSCALL) {
 #if !defined(LWS_WITH_ESP32)
